@@ -29,6 +29,6 @@ These scripts use [nltk.tag](http://nltk.org/api/nltk.tag.html).
      scared/VBN day/NN 1
      him/PRP before/IN 1 
 
-## LICNECE
+## LICENCE
 
 MIT
