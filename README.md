@@ -28,3 +28,7 @@ These scripts use [nltk.tag](http://nltk.org/api/nltk.tag.html).
      was/VBD the/DT 1
      scared/VBN day/NN 1
      him/PRP before/IN 1 
+
+## LICNECE
+
+MIT
