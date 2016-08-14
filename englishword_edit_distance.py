@@ -75,7 +75,7 @@ class EditDistance(object):
         now = m[i][j]
 
         edit_trail = []
-        while(i > 0 or j > 0):
+        while i > 0 or j > 0:
             up_index = m[i - 1][j]
             diagonal_index = m[i -1][j - 1]
             left_index = m[i][j - 1]
@@ -167,7 +167,7 @@ class EditDistance(object):
             else:
                 print 'this tag is not defined'
 
-        return (tags, srcs, dsts)
+        return tags, srcs, dsts
 
 
     def extract(self, src, dst):
@@ -210,7 +210,7 @@ class EditDistance(object):
         """
         def make_string(edit_rev_triple, src_pos, dst_pos, index):
             tags, srcs, dsts = edit_rev_triple
-            return (srcs[index] + u'/' + src_pos[index], dsts[index] + u'/' + dst_pos[index])
+            return srcs[index] + u'/' + src_pos[index], dsts[index] + u'/' + dst_pos[index]
 
         def make_window_tags(sub_index, tags, window):
             window_tags = []
@@ -274,6 +274,8 @@ class EditDistance(object):
 
         def make_pos(target_tag, edit_rev):
             tags, srcs, dsts = edit_rev
+
+            sentence = ''
 
             if target_tag == del_tag:
                 sentence = dsts
