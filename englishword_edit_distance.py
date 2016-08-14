@@ -68,10 +68,6 @@ class EditDistance(object):
         """
         m = self.build_edit_graph(src, dst)
 
-        # tokenize
-        src = src.split(u" ")
-        dst = dst.split(u" ")
-
         #最後からたどるために、エディットグラフの右下のインデックスを得る
         # Get index at end of the edit graph.
         i = len(m) - 1
@@ -179,10 +175,6 @@ class EditDistance(object):
         """
         edit_rev_triple = self.build_edit_rev(src, dst)
 
-        # tokenize
-        src = src.split(u" ")
-        dst = dst.split(u" ")
-
         sub_list = []
 
         tags, srcs, dsts = edit_rev_triple
@@ -240,10 +232,6 @@ class EditDistance(object):
 
         edit_rev_triple = self.build_edit_rev(src, dst)
 
-        # tokenize
-        src = src.split(u" ")
-        dst = dst.split(u" ")
-
         sub_list = [] # difference list
 
         tags, srcs, dsts = edit_rev_triple
@@ -285,7 +273,7 @@ class EditDistance(object):
         from nltk.tag import pos_tag
 
         def make_pos(target_tag, edit_rev):
-            tags, srcs, dsts = edit_rev_triple
+            tags, srcs, dsts = edit_rev
 
             if target_tag == del_tag:
                 sentence = dsts
@@ -315,8 +303,6 @@ class EditDistance(object):
                 pos = [w[1] for w in posed]
 
             return pos
-
-        tags, srcs, dsts = edit_rev_triple
 
         src_pos = make_pos(add_tag, edit_rev_triple)
         dst_pos = make_pos(del_tag, edit_rev_triple)

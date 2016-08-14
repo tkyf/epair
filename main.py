@@ -28,7 +28,6 @@ def main():
     ed = ewed.EditDistance(eq_include=args.eq_include, no_pos=args.no_pos)
 
     with codecs.open(args.c, 'r', 'utf-8') as c, codecs.open(args.i, 'r', 'utf-8') as i:
-        start = time()
         for i, (corr, incor) in enumerate(zip(c, i)):
             corr = corr.rstrip(u"\n").rstrip(u"\r")
             incor = incor.rstrip(u"\n").rstrip(u"\r")
