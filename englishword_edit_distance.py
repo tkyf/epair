@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # edit tag
-eq_tag =  '.'
+eq_tag = '.'
 add_tag = '+'
 del_tag = '-'
 sub_tag = '/'
+
 
 class EditDistance(object):
 
@@ -19,7 +20,6 @@ class EditDistance(object):
         self.with_pos = not no_pos
         self.is_test = is_test
 
-       
     def build_edit_graph(self, src, dst):
         """[FUNCTIONS] Build edit graph between two sentences.
 
@@ -36,7 +36,7 @@ class EditDistance(object):
         dst = dst.split(u" ")
 
         # Initialize a two-dimesional for edit graph to be used for dynamic programming
-        m = [[0] * (len(dst)+1) for i in range(len(src) +1)]
+        m = [[0] * (len(dst)+1) for i in range(len(src) + 1)]
 
         # Initialize LD(i,0)
         for i in range(len(src) + 1):
@@ -57,7 +57,6 @@ class EditDistance(object):
 
         return m
 
-
     def build_edit_trail(self, src, dst):
         """[FUNCTIONS] Trace the edit graph from end to make a revision history.
         The revision history is a list composed of strings 'add', 'del', 'eq' and 'sub'.
@@ -76,7 +75,7 @@ class EditDistance(object):
         edit_trail = []
         while i > 0 or j > 0:
             up_index = m[i - 1][j]
-            diagonal_index = m[i -1][j - 1]
+            diagonal_index = m[i - 1][j - 1]
             left_index = m[i][j - 1]
 
             # priority: eq(diagonal),sub(diagonal), del(up), add(left)
@@ -113,7 +112,6 @@ class EditDistance(object):
 
         # Reverse to get revision history from start.
         return list(reversed(edit_trail))
-
 
     def build_edit_rev(self, src, dst):
         """[FUNCTIONS] Build a triple composed by a edit tag, a string before change, a string after change
@@ -168,7 +166,6 @@ class EditDistance(object):
 
         return tags, srcs, dsts
 
-
     def extract(self, src, dst):
         """[FUNCTIONS] make a list of expression pair of two strings.
         """
@@ -213,7 +210,7 @@ class EditDistance(object):
 
         def make_window_tags(_sub_index, _tags, _window):
             _window_tags = []
-            window_range = range( 1, _window+1)
+            window_range = range(1, _window+1)
 
             for window_index in window_range:
                 try:
@@ -231,7 +228,7 @@ class EditDistance(object):
 
         edit_rev_triple = self.build_edit_rev(src, dst)
 
-        sub_list = [] # difference list
+        sub_list = []  # difference list
 
         tags, srcs, dsts = edit_rev_triple
 
@@ -244,12 +241,12 @@ class EditDistance(object):
             for sub_index in sub_tag_indexes:
 
                 if len(tags) == 1:
-                    if src_pos and dst_pos :
+                    if src_pos and dst_pos:
                         sub_list.append(make_string(edit_rev_triple, src_pos, dst_pos, sub_index))
                 else:
                     window_tags = make_window_tags(sub_index, tags, window)
-                    if all([ x == eq_tag for x in window_tags]):
-                        sub_list.append(make_string(edit_rev_triple, src_pos, dst_pos,sub_index))
+                    if all([x == eq_tag for x in window_tags]):
+                        sub_list.append(make_string(edit_rev_triple, src_pos, dst_pos, sub_index))
 
         if self.eq_include:
             if self.with_pos:
@@ -262,7 +259,6 @@ class EditDistance(object):
                         sub_list.append((s, d))
 
         return sub_list
-
 
     def pos_with_rev(self, edit_rev_triple):
         """[FUNCTIONS] Add parts of speech to a sentence before change and a sentence after change.
@@ -292,7 +288,7 @@ class EditDistance(object):
                 for tag_index in tag_indexes:
                     pos.insert(tag_index, u'')
 
-                #debug
+                # debug
                 None_indexes = [i for i, x in enumerate(pos) if x == u'']
                 if tag_indexes != None_indexes:
                     print >>sys.stderr, tag_indexes
@@ -309,7 +305,6 @@ class EditDistance(object):
         dst_pos = make_pos(del_tag, edit_rev_triple)
 
         return src_pos, dst_pos
-
 
     def distance(self, src, dst):
         """[FUNCTIONS] return a levenshtein distance of two sentences.

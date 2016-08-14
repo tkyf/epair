@@ -1,9 +1,11 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
+
 def is_ascii(string):
     if string:
         return max([ord(char) for char in string]) < 128
+
 
 def main():
     import sys
@@ -17,7 +19,8 @@ def main():
     parser.add_argument("-i", dest="i", help="Incorrect file")
     parser.add_argument("-eq", dest="eq_include", action="store_true", help="Result include no revision pair")
     parser.add_argument("-nopos", dest="no_pos", action="store_true", help="without POS tag")
-    parser.add_argument("-w", metavar="N", type=int, dest="iso_window", action="store", help="one side window range of  substitution only revision. ")
+    parser.add_argument("-w", metavar="N", type=int, dest="iso_window", action="store",
+                        help="one side window range of substitution only revision. ")
 
     if len(sys.argv) < 3:
         parser.print_help()
@@ -38,8 +41,7 @@ def main():
 
             for sub in sub_list:
                 if is_ascii(sub[0]) and is_ascii(sub[1]):
-                    print(sub[0].encode('utf-8'), sub[1].encode('utf-8'), str(j+1).encode('utf-8'))
+                    print(sub[0].encode('utf-8'), sub[1].encode('utf-8'), str(j + 1).encode('utf-8'))
 
 if __name__ == '__main__':
     main()
-
