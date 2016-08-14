@@ -9,7 +9,6 @@ def main():
     import sys
     import argparse
     import codecs
-    from time import time
 
     import englishword_edit_distance as ewed
 
