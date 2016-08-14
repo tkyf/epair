@@ -10,9 +10,9 @@ class EditDistance(object):
 
     def __init__(self, eq_include=False, no_pos=False, is_test=False):
         """
-        eq_include -- 差分ペアだけでなく、変化のない単語も出力する。
-        no_pos -- 差分ペアに品詞をつける（添削側の品詞）
-        is_test    -- True を指定すると、途中経過を表示する。
+        eq_include -- Output words not only difference pairs but also no changes if a specified condition is True.
+        no_pos -- Append parts of speech to difference pairs if a specified condition is True.
+        is_test -- Show progress if a specified condition is True.
         """
 
         self.eq_include = eq_include
@@ -21,33 +21,32 @@ class EditDistance(object):
 
        
     def build_edit_graph(self, src, dst):
-        """[FUNCTIONS] 二つの文のあいだのエディットグラフを作る。
+        """[FUNCTIONS] Build edit graph between two sentences.
 
         Keyword argument:
-        src -- 1つ目の文。例：学習者の文  :: unicode
-        dst -- 2つ目の文。例：添削文      :: unicode
+        src -- first sentence e.g. a sentence written by learner :: unicode
+        dst -- second sentence e.g. a revised sentence  :: unicode
 
         Return value:
         edit_graph  :: [[int]]
         """
 
-        # tokenize スペースで切るだけ
+        # tokenize
         src = src.split(u" ")
         dst = dst.split(u" ")
 
-        # DPで使うエディットグラフ用の2次元配列の初期化。
-        # サイズを+1するのは先頭要素("","")があるため
+        # Initialize a two-dimesional for edit graph to be used for dynamic programming
         m = [[0] * (len(dst)+1) for i in range(len(src) +1)]
 
-        # LD(i,0)となる自明な箇所の初期化
+        # Initialize LD(i,0)
         for i in xrange(len(src) + 1):
             m[i][0] = i
 
-        # LD(0,j)となる自明な箇所の初期化
+        # Initialize LD(0,j)
         for j in xrange(len(dst)+1):
             m[0][j] = j
 
-        # エディットグラフの値を埋める。
+        # build edit graph
         for i in xrange(1, len(src) + 1):
             for j in xrange(1, len(dst) + 1):
                 if src[i - 1] == dst[j - 1]:
@@ -60,21 +59,21 @@ class EditDistance(object):
 
 
     def build_edit_trail(self, src, dst):
-        """[FUNCTIONS] エディットグラフを終端（最も右下）から左上にたどり、
-        二つの文の編集履歴を得る。
-        編集履歴は'add', 'del', 'eq', 'sub'のリスト。
+        """[FUNCTIONS] Trace the edit graph from end to make a revision history.
+        The revision history is a list composed of strings 'add', 'del', 'eq' and 'sub'.
 
         Keyword arguments:
-        src        -- 1つ目の文。例：学習者の文  :: unicode
-        dst        -- 2つ目の文。例：添削文      :: unicode
+        src -- first sentence e.g. a sentence written by learner :: unicode
+        dst -- second sentence e.g. a revised sentence  :: unicode
         """
         m = self.build_edit_graph(src, dst)
 
-        # tokenize スペースで切るだけ
+        # tokenize
         src = src.split(u" ")
         dst = dst.split(u" ")
 
         #最後からたどるために、エディットグラフの右下のインデックスを得る
+        # Get index at end of the edit graph.
         i = len(m) - 1
         j = len(m[0]) - 1
         now = m[i][j]
@@ -85,21 +84,20 @@ class EditDistance(object):
             diagonal_index = m[i -1][j - 1]
             left_index = m[i][j - 1]
 
-            # 優先順位は eq(diagonal),sub(diagnal), del(up), add(left)の順
+            # priority: eq(diagonal),sub(diagonal), del(up), add(left)
             min_list = [diagonal_index, up_index, left_index]
             min_num = min(min_list)
             min_index = min_list.index(min_num)
-            # これで、斜め・左・上のどのスコアが最も小さいか分かった。
 
-            # エディットグラフの上端に到達しているときはそのまま左に進む
+            # at top
             if i == 0:
                 j -= 1
                 edit_trail.append('add')
-            # 左端に到達しているときはそのまま上に進む
+            # at left end
             elif j == 0:
                 i -= 1
                 edit_trail.append('del')
-            # 斜めはeq または sub
+            # diagonal
             elif min_index == 0:
                 if min_num == now:
                     i -= 1
@@ -118,19 +116,18 @@ class EditDistance(object):
                     edit_trail.append('add')
             now = m[i][j]
 
-        # 左上からの編集履歴を得るために、reverseする。
+        # Reverse to get revision history from start.
         return list(reversed(edit_trail))
 
 
     def build_edit_rev(self, src, dst):
-        """[FUNCTIONS] 編集タグ、変更前文字列、変更後文字列の三つ組を作る。
-        挿入操作が行われた単語の箇所には、変更前文字列にu'＿'が挿入される。
-        削除操作が行われた単語の箇所には、変更後文字列にu'＿'が挿入される。
-
+        """[FUNCTIONS] Build a triple composed by a edit tag, a string before change, a string after change
+        Insert u'＿' to position of a added word in a string before change.
+        Insert u'＿' to position of a deleted word in a string after change.
 
         Keyword arguments:
-        src        -- 1つ目の文。例：学習者の文  :: unicode
-        dst        -- 2つ目の文。例：添削文      :: unicode
+        src -- first sentence e.g. a sentence written by learner :: unicode
+        dst -- second sentence e.g. a revised sentence  :: unicode
 
         Return value:
         (tag_list, src_list, dst_list)
@@ -139,7 +136,7 @@ class EditDistance(object):
 
         edit_trail = self.build_edit_trail(src, dst)
 
-        # tokenize スペースで切るだけ
+        # tokenize
         src = src.split(u" ")
         dst = dst.split(u" ")
 
@@ -172,17 +169,17 @@ class EditDistance(object):
                 src_index += 1
                 dst_index += 1
             else:
-                print 'this tag is not defiened'
+                print 'this tag is not defined'
 
         return (tags, srcs, dsts)
 
 
     def extract(self, src, dst):
-        """[FUNCTIONS] 学習者の表現と添削者の表現のペアを作る
+        """[FUNCTIONS] make a list of expression pair of two strings.
         """
         edit_rev_triple = self.build_edit_rev(src, dst)
 
-        # tokenize スペースで切るだけ
+        # tokenize
         src = src.split(u" ")
         dst = dst.split(u" ")
 
@@ -212,19 +209,18 @@ class EditDistance(object):
         return sub_list
 
     def extract_isolation_window(self, src, dst, window=1):
-        """[FUNCTIONS] 学習者の表現と添削者の表現のペアを作る
-        独立した置換操作の箇所をすべて取り出す。
-        windowが1のとき：トライグラム
-                2のとき：5gram
-                3のとき：7gram
-                …と増えていく
+        """[FUNCTIONS] make a list of expression pair of two strings.
+        Extract all words isolation replace operations.
+        window 1: tri-gram
+               2: 5gram
+               3: 7gram
+               ...
         """
         def make_string(edit_rev_triple, src_pos, dst_pos, index):
             tags, srcs, dsts = edit_rev_triple
             return (srcs[index] + u'/' + src_pos[index], dsts[index] + u'/' + dst_pos[index])
 
         def make_window_tags(sub_index, tags, window):
-            #window内のタグを返す
             window_tags = []
             window_range = range( 1, window+1)
 
@@ -244,15 +240,14 @@ class EditDistance(object):
 
         edit_rev_triple = self.build_edit_rev(src, dst)
 
-        # tokenize スペースで切るだけ
-        src = src.split(u" ") # 添削前の文
-        dst = dst.split(u" ") # 添削後の文
+        # tokenize
+        src = src.split(u" ")
+        dst = dst.split(u" ")
 
-        sub_list = [] # 置換ペアのリストを格納する
+        sub_list = [] # difference list
 
         tags, srcs, dsts = edit_rev_triple
 
-        # 置換されている単語がなければ、空のままリストを返す
         if sub_tag not in tags:
             return sub_list
 
@@ -261,7 +256,7 @@ class EditDistance(object):
         if self.with_pos:
             for sub_index in sub_tag_indexes:
 
-                if len(tags) == 1: # １単語だけの時
+                if len(tags) == 1:
                     if src_pos and dst_pos :
                         sub_list.append(make_string(edit_rev_triple, src_pos, dst_pos, sub_index))
                 else:
@@ -283,7 +278,7 @@ class EditDistance(object):
 
 
     def pos_with_rev(self, edit_rev_triple):
-        """[FUNCTIONS] 三つ組の添削前,添削後の文に品詞をつける。
+        """[FUNCTIONS] Add parts of speech to a sentence before change and a sentence after change.
         """
         import sys
 
@@ -292,8 +287,6 @@ class EditDistance(object):
         def make_pos(target_tag, edit_rev):
             tags, srcs, dsts = edit_rev_triple
 
-            # target_tag: 文中に存在する
-            # 品詞を付与する前に、文中から削除・追加タグが存在する部分を取り除く
             if target_tag == del_tag:
                 sentence = dsts
             elif target_tag == add_tag:
@@ -332,10 +325,10 @@ class EditDistance(object):
 
 
     def distance(self, src, dst):
-        """[FUNCTIONS] 二つの文字列の編集距離を返す。
+        """[FUNCTIONS] return a levenshtein distance of two sentences.
         Key word argument:
-        src    -- 文字列その1。例えば、学習者の文。 :: unicode
-        dst    -- 文字列その2。例えば、添削文。     :: unicode
+        src -- first sentence e.g. a sentence written by learner :: unicode
+        dst -- second sentence e.g. a revised sentence  :: unicode
 
         Return value:
         edit_distance :: int
