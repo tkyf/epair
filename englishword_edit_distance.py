@@ -289,12 +289,12 @@ class EditDistance(object):
                     pos.insert(tag_index, u'')
 
                 # debug
-                None_indexes = [i for i, x in enumerate(pos) if x == u'']
-                if tag_indexes != None_indexes:
-                    print >>sys.stderr, tag_indexes
-                    print >>sys.stderr, None_indexes
-                    print >>sys.stderr, tags
-                    print >>sys.stderr, pos
+                none_indexes = [i for i, x in enumerate(pos) if x == u'']
+                if tag_indexes != none_indexes:
+                    print(tag_indexes, file=sys.stderr)
+                    print(none_indexes, file=sys.stderr)
+                    print(tags, file=sys.stderr)
+                    print(pos, file=sys.stderr)
             else:
                 posed = pos_tag(u' '.join(sentence).split())
                 pos = [w[1] for w in posed]
