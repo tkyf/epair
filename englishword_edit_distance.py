@@ -68,7 +68,6 @@ class EditDistance(object):
         """
         m = self.build_edit_graph(src, dst)
 
-        #最後からたどるために、エディットグラフの右下のインデックスを得る
         # Get index at end of the edit graph.
         i = len(m) - 1
         j = len(m[0]) - 1
