@@ -6,7 +6,7 @@ Extract word revision pairs with POS from english sentence pair.
 An algorithm to get revision word of sentences is the levenshtein distance in this scripts.
 
 ## Platform
-Python 2.7
+Python 3.5.2
 
 ## Pre-requisites
 
