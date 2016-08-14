@@ -38,7 +38,7 @@ def main():
 
             for sub in sub_list:
                 if is_ascii(sub[0]) and is_ascii(sub[1]):
-                    print sub[0].encode('utf-8'), sub[1].encode('utf-8'), unicode(i+1).encode('utf-8')
+                    print(sub[0].encode('utf-8'), sub[1].encode('utf-8'), str(i+1).encode('utf-8'))
 
 if __name__ == '__main__':
     main()

@@ -39,16 +39,16 @@ class EditDistance(object):
         m = [[0] * (len(dst)+1) for i in range(len(src) +1)]
 
         # Initialize LD(i,0)
-        for i in xrange(len(src) + 1):
+        for i in range(len(src) + 1):
             m[i][0] = i
 
         # Initialize LD(0,j)
-        for j in xrange(len(dst)+1):
+        for j in range(len(dst)+1):
             m[0][j] = j
 
         # build edit graph
-        for i in xrange(1, len(src) + 1):
-            for j in xrange(1, len(dst) + 1):
+        for i in range(1, len(src) + 1):
+            for j in range(1, len(dst) + 1):
                 if src[i - 1] == dst[j - 1]:
                     x = 0
                 else:
@@ -165,7 +165,7 @@ class EditDistance(object):
                 src_index += 1
                 dst_index += 1
             else:
-                print 'this tag is not defined'
+                print('this tag is not defined')
 
         return tags, srcs, dsts
 
@@ -270,7 +270,7 @@ class EditDistance(object):
         """
         import sys
 
-        from nltk.tag import pos_tag
+        from nltk import pos_tag
 
         def make_pos(target_tag, edit_rev):
             tags, srcs, dsts = edit_rev
