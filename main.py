@@ -5,7 +5,6 @@ def is_ascii(string):
     if string:
         return max([ord(char) for char in string]) < 128
 
-# TODO Word unit edit distance!!!!
 def main():
     import sys
     import argparse
