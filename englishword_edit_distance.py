@@ -31,9 +31,10 @@ class EditDistance(object):
         edit_graph  :: [[int]]
         """
 
-        # tokenize
-        src = src.split(u" ")
-        dst = dst.split(u" ")
+        import nltk
+
+        src = nltk.word_tokenize(src)
+        dst = nltk.word_tokenize(dst)
 
         # Initialize a two-dimesional for edit graph to be used for dynamic programming
         m = [[0] * (len(dst)+1) for i in range(len(src) + 1)]
@@ -124,14 +125,14 @@ class EditDistance(object):
 
         Return value:
         (tag_list, src_list, dst_list)
-
         """
+
+        import nltk
 
         edit_trail = self.build_edit_trail(src, dst)
 
-        # tokenize
-        src = src.split(u" ")
-        dst = dst.split(u" ")
+        src = nltk.word_tokenize(src)
+        dst = nltk.word_tokenize(dst)
 
         src_index = 0
         dst_index = 0
