@@ -208,27 +208,27 @@ class EditDistance(object):
                3: 7gram
                ...
         """
-        def make_string(edit_rev_triple, src_pos, dst_pos, index):
-            tags, srcs, dsts = edit_rev_triple
-            return srcs[index] + u'/' + src_pos[index], dsts[index] + u'/' + dst_pos[index]
+        def make_string(_edit_rev_triple, _src_pos, _dst_pos, index):
+            _tags, _srcs, _dsts = _edit_rev_triple
+            return _srcs[index] + u'/' + _src_pos[index], _dsts[index] + u'/' + _dst_pos[index]
 
-        def make_window_tags(sub_index, tags, window):
-            window_tags = []
-            window_range = range( 1, window+1)
+        def make_window_tags(_sub_index, _tags, _window):
+            _window_tags = []
+            window_range = range( 1, _window+1)
 
             for window_index in window_range:
                 try:
-                    pre_index = sub_index - window_index
-                    window_tags.append(tags[pre_index])
+                    pre_index = _sub_index - window_index
+                    _window_tags.append(_tags[pre_index])
                 except IndexError:
                     pass
                 try:
-                    succ_index = sub_index + window_index
-                    window_tags.append(tags[succ_index])
+                    succ_index = _sub_index + window_index
+                    _window_tags.append(_tags[succ_index])
                 except IndexError:
                     pass
 
-            return window_tags
+            return _window_tags
 
         edit_rev_triple = self.build_edit_rev(src, dst)
 

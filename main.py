@@ -27,7 +27,7 @@ def main():
     ed = ewed.EditDistance(eq_include=args.eq_include, no_pos=args.no_pos)
 
     with codecs.open(args.c, 'r', 'utf-8') as c, codecs.open(args.i, 'r', 'utf-8') as i:
-        for i, (corr, incor) in enumerate(zip(c, i)):
+        for j, (corr, incor) in enumerate(zip(c, i)):
             corr = corr.rstrip(u"\n").rstrip(u"\r")
             incor = incor.rstrip(u"\n").rstrip(u"\r")
 
@@ -38,7 +38,7 @@ def main():
 
             for sub in sub_list:
                 if is_ascii(sub[0]) and is_ascii(sub[1]):
-                    print(sub[0].encode('utf-8'), sub[1].encode('utf-8'), str(i+1).encode('utf-8'))
+                    print(sub[0].encode('utf-8'), sub[1].encode('utf-8'), str(j+1).encode('utf-8'))
 
 if __name__ == '__main__':
     main()
