@@ -14,10 +14,10 @@ def main():
 
     import englishword_edit_distance as ewed
 
-    parser = argparse.ArgumentParser(description="Extract revision pair from English sentence pair")
-    parser.add_argument("-c", dest="c", help="Correction file")
-    parser.add_argument("-i", dest="i", help="Incorrect file")
-    parser.add_argument("-eq", dest="eq_include", action="store_true", help="Result include no revision pair")
+    parser = argparse.ArgumentParser(description="Extract revision pairs from English sentence pair")
+    parser.add_argument("-c", dest="c", help="A correction file")
+    parser.add_argument("-i", dest="i", help="A incorrect file")
+    parser.add_argument("-eq", dest="eq_include", action="store_true", help="Results include no revision pair")
     parser.add_argument("-nopos", dest="no_pos", action="store_true", help="without POS tag")
     parser.add_argument("-w", metavar="N", type=int, dest="iso_window", action="store",
                         help="one side window range of substitution only revision. ")
